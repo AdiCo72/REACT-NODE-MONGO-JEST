@@ -1,22 +1,20 @@
 const request = require("supertest");
 const app = require("../../app");
-const { mongoConnect, mongoDisconnect, } = require("../../services/mongo.js");
+const { mongoConnect, mongoDisconnect } = require("../../services/mongo.js");
 
 describe("Launches API", () => {
-
-  beforeAll( async () => {
+  beforeAll(async () => {
     await mongoConnect();
   });
 
-  afterAll( async () => {
-    await mongoDisconnect(); 
+  afterAll(async () => {
+    await mongoDisconnect();
   });
-
 
   describe("Test GET /launches", () => {
     test("It should response with 200 success", async () => {
       const response = await request(app)
-        .get("/launches")
+        .get("/v1/launches")
         .expect("Content-Type", /json/)
         .expect(200);
       //expect(response.statusCode).toBe(200); la fel cu jest
@@ -24,7 +22,6 @@ describe("Launches API", () => {
   });
 
   describe("Test POST /launches", () => {
-    
     const completeLaunchData = {
       mission: "USS Enterprise",
       rocket: "NCC",
@@ -47,7 +44,7 @@ describe("Launches API", () => {
 
     test("It should response 201 created", async () => {
       const response = await request(app) //supertest
-        .post("/launches")
+        .post("/v1/launches")
         .send(completeLaunchData)
         .expect("Content-Type", /json/)
         .expect(201);
@@ -61,7 +58,7 @@ describe("Launches API", () => {
 
     test("it should test missing ...", async () => {
       const response = await request(app) //supertest
-        .post("/launches")
+        .post("/v1/launches")
         .send(launchDataWithoutDate)
         .expect("Content-Type", /json/)
         .expect(400);
@@ -73,7 +70,7 @@ describe("Launches API", () => {
 
     test("it should test invalid dates ...", async () => {
       const response = await request(app) //supertest
-        .post("/launches")
+        .post("/v1/launches")
         .send(completeLaunchErrorDate)
         .expect("Content-Type", /json/)
         .expect(400);

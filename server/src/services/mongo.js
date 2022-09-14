@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
-const MONGO_URL =
-  "mongodb+srv://adiperformion:Zysboc4wMcWuLXRi@performion.7syuejd.mongodb.net/bubu?retryWrites=true&w=majority";
+require('dotenv').config();
+
+const MONGO_URL = process.env.MONGO_URL;
 
 mongoose.connection.once("open", () => {
   console.log("Mongo Db Connection is ready");
@@ -12,7 +13,12 @@ mongoose.connection.on("error", (err) => {
 });
 
 async function mongoConnect() {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(MONGO_URL, {
+    useNewUrlParser: true,
+    // useFindAndModify: false,
+    // useCreateIndex: true,
+    useUnifiedTopology: true,
+  });
 }
 
 async function mongoDisconnect(){
